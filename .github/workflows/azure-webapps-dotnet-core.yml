@@ -35,13 +35,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: WeatherForecastAPI
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: List repository files
+        run: ls -R
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v2
@@ -57,10 +57,10 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build WeatherForecastAPI.sln --configuration Release
+        run: dotnet build WeatherForecastAPI/WeatherForecastAPI.sln --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish WeatherForecastAPI.sln -c Release -o ${{github.workspace}}/myapp
+        run: dotnet publish WeatherForecastAPI/WeatherForecastAPI.sln -c Release -o ${{github.workspace}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
