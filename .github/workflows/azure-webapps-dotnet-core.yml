@@ -62,14 +62,11 @@ jobs:
       - name: List files in working directory
         run: ls -R
 
-      - name: Change directory to solution location
-        run: cd WeatherForecastAPI/WeatherForecastAPI && ls -R
-
       - name: Build with dotnet
-        run: dotnet build WeatherForecastAPI/WeatherForecastAPI.sln --configuration Release
+        run: dotnet build WeatherForecastAPI/WeatherForecastAPI/WeatherForecastAPI.sln --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish WeatherForecastAPI/WeatherForecastAPI.sln -c Release -o ${{github.workspace}}/myapp
+        run: dotnet publish WeatherForecastAPI/WeatherForecastAPI/WeatherForecastAPI.sln -c Release -o ${{github.workspace}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
