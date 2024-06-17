@@ -20,9 +20,9 @@
 name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: WFGitactions    # set this to the name of your Azure Web App
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '5.0'                 # set this to the .NET Core version to use
+  AZURE_WEBAPP_NAME: WFGitactions          # Set this to the name of your Azure Web App
+  AZURE_WEBAPP_PACKAGE_PATH: '.'           # Set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '5.0'                    # Set this to the .NET Core version to use
 
 on:
   push:
@@ -35,12 +35,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults: 
-      run: 
-       working-directory: WeatherForecastAPI
+    defaults:
+      run:
+        working-directory: WeatherForecastAPI
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v2
@@ -56,16 +57,16 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build ./WeatherForecastAPI.sln --configuration Release
+        run: dotnet build WeatherForecastAPI.sln --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish WeatherForecastAPI.sln -c Release -o ${{github.workspace}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{github.workspace}}/myapp
 
   deploy:
     permissions:
@@ -88,4 +89,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: ./.net-app
