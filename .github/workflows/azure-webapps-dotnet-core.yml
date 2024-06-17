@@ -56,6 +56,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
+      - name: Print working directory
+        run: pwd
+
+      - name: List files in working directory
+        run: ls -R
+
       - name: Build with dotnet
         run: dotnet build WeatherForecastAPI/WeatherForecastAPI.sln --configuration Release
 
